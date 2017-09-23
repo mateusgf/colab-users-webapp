@@ -85,6 +85,7 @@ export class HomeComponent implements OnInit {
                 var str = this.CSV2JSON(data);
             } else {
                 var str = this.parseExcel(data);
+                //@TODO: parse todas as colunas, checar sua existencia, se não existir criar com valor vazio.
             }
 
             var finalObj = JSON.parse(str);
@@ -152,7 +153,8 @@ export class HomeComponent implements OnInit {
 
         var str = '';
         workbook.SheetNames.forEach((sheetName) => {
-            var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+            //var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+            var XL_row_object = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
             var json_object = JSON.stringify(XL_row_object);
             console.log(json_object);
             str = json_object;
@@ -160,15 +162,6 @@ export class HomeComponent implements OnInit {
 
         return str;
   }
-
-//   public submitState(value: string) {
-//     console.log('submitState', value);
-//     this.appState.set('value', value);
-//   }
-
-//   public onChangeFile(e) {
-//     console.log('onChangeFile', e);
-//   }
 
   public CSVToArray(strData, strDelimiter) {
     strDelimiter = (strDelimiter || ",");
