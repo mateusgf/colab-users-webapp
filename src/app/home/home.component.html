@@ -1,0 +1,87 @@
+<header class="container">
+    <h1 class="m--1 g--4 g-s--12 docsHeader">Users</h1>
+</header>
+
+<div class="g--10 m--1">
+
+
+    <div class="card g--12 g-s--12">
+        <h4>Select a .CSV ou .XLS file</h4>
+        <input type="file" id="file" name="file" accept=".csv,.xls,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
+        <output id="list"></output>
+
+        <div *ngIf="errors.length>0;">
+          <h4>We found some errors in your file:</h4>
+          <ul>
+            <li *ngFor="let error of errors" class="tile color--pomegranate">{{ error }}</li>
+          </ul>
+        </div>
+
+    </div>
+        
+
+    <div *ngIf="usersCollection && usersCollection.length > 0">
+      <button class="btn--raised" (click)="importSelected()">Import selected users</button>
+
+      <table class="g--12 card">
+          <tr class="table-header">
+            <td>Importar</td>
+            <td>Name</td>
+            <td>Email</td>
+            <td>CPF</td>
+            <td>CNPJ</td>
+            <td>Phone Number</td>
+          </tr>
+          <tr *ngFor="let user of usersCollection;trackBy:trackByFn">
+            <td>
+                <span *ngIf="user.validation.length==0;">
+                  <input type="checkbox" [(ngModel)]="usersCollection[user.index]['import']" (change)="toggleUserImport(user.index)"/>
+                </span>
+            </td>
+            <td>
+              {{ user.name }}
+              <span *ngIf="user.validation.indexOf('name_invalid')>-1;" class="bg--pomegranate color--white"><small>Nome inválido</small></span>
+            </td>
+            <td>
+              {{ user.email }}
+              <span *ngIf="user.validation.indexOf('email_not_unique')>-1;" class="bg--pomegranate color--white"><small>Email já cadastrado</small></span>
+            </td>
+            <td>
+              {{ user.cpf }}
+              <span *ngIf="user.validation.indexOf('cpf_invalid')>-1;" class="bg--pomegranate color--white"><small>CPF inválido</small></span>
+            </td>
+            <td>
+              {{ user.cnpj }}
+              <span *ngIf="user.validation.indexOf('cnpj_invalid')>-1;" class="bg--pomegranate color--white"><small>CNPJ inválido</small></span>
+            </td>
+            <td>{{ user.phoneNumber }}</td>
+          </tr>
+      </table>
+    </div>
+
+
+
+  
+    <div>
+      <hr>
+      <h1 x-large class="sample-content">Users on database</h1>
+
+      <div *ngIf="usersCollectionDatabase && usersCollectionDatabase.length > 0"></div>
+        <table class="g--12 card">
+            <tr class="table-header">
+              <td>Name</td>
+              <td>Email</td>
+              <td>CPF</td>
+              <td>CNPJ</td>
+              <td>Phone Number</td>
+            </tr>
+            <tr *ngFor="let user of usersCollectionDatabase;trackBy:trackByUserDatabaseFn">
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.cpf }}</td>
+              <td>{{ user.cnpj }}</td>
+              <td>{{ user.phoneNumber }}</td>
+            </tr>
+        </table>
+      </div>
+    </div>
